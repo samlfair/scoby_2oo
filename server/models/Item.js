@@ -19,13 +19,8 @@ const itemSchema = new Schema(
     quantity: Number,
     address: String,
     location: {
-      type: {
-        type: String,
-        enum: ["Point"],
-      },
-      coordinates: {
-        type: [Number],
-      },
+      // type: "Point",
+      coordinates: [Number],
       formattedAddress: String,
     },
     id_user: {

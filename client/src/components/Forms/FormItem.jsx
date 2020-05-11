@@ -1,18 +1,59 @@
 import React, { Component } from "react";
 import LocationAutoComplete from "../LocationAutoComplete";
-import "../../styles/form.css";
+import "../../styles/form.css"
+import axios from "axios"
 
 class ItemForm extends Component {
-  state = {};
+  
+  state = {
+    name:"",
+    description:"",
+    image:"",
+    category:"",
+    quantity:0,
+    address:"",
+    email:false,
+    phone:false,
+    type:undefined,
+    coordinates:undefined,
+    formattedAddress:undefined
 
-  handleChange(event) {
-    console.log("Wax On Wax Off");
-    this.setState({});
+    }
+
+  handleChange = (event) => {
+    // console.log(event);
+    if (event.target.name !== "email" && event.target.name !== "phone" && event.target.name !=="image"){
+      this.setState({[event.target.name]:event.target.value});
+    } else if (event.target.name ==="image"){
+      this.setState({image : event.target.closest("form").image.files[0]});
+    } else  {
+      this.setState({[event.target.name]:event.target.checked});
+    }
+    
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Wax On Wax Off");
+    const form = new FormData()
+    const location = {
+      type: this.state.type,
+      coordinates: this.state.coordinates,
+      formattedAddress: this.state.formattedAddress,
+    }
+    console.log(this.state);
+    form.append("name",this.state.name)
+    form.append("description",this.state.description)
+    form.append("image",this.state.image)
+    form.append("category",this.state.category)
+    form.append("quantity",this.state.quantity)
+    form.append("address",this.state.address)
+    form.append("location", location)
+
+    console.log(form)
+  
+    axios.post(process.env.REACT_APP_BACKEND_URL + "/api/items", form)
+    .then(apiResponse => console.log(apiResponse))
+    .catch(apiErr => console.log(apiErr))
 
     // In order to send back the data to the client, since there is an input type file you have to send the
     // data as formdata.
@@ -26,6 +67,8 @@ class ItemForm extends Component {
     // This handle is passed as a callback to the autocomplete component.
     // Take a look at the data and see what you can get from it.
     // Look at the item model to know what you should retrieve and set as state.
+
+    this.setState({type : place.geometry.type, coordinates: place.geometry.coordinates, formattedAddress: place.geometry.place_name, address : place.geometry.place_name});
     console.log(place);
   };
 
@@ -41,6 +84,7 @@ class ItemForm extends Component {
             </label>
             <input
               id="name"
+              name="name"
               className="input"
               type="text"
               placeholder="What are you giving away ?"
@@ -52,7 +96,7 @@ class ItemForm extends Component {
               Category
             </label>
 
-            <select id="category" defaultValue="-1">
+            <select name="category" id="category" defaultValue="-1">
               <option value="-1" disabled>
                 Select a category
               </option>
@@ -67,7 +111,7 @@ class ItemForm extends Component {
             <label className="label" htmlFor="quantity">
               Quantity
             </label>
-            <input className="input" id="quantity" type="number" />
+            <input name="quantity" className="input" id="quantity" type="number" />
           </div>
 
           <div className="form-group">
@@ -82,6 +126,7 @@ class ItemForm extends Component {
               Description
             </label>
             <textarea
+              name="description"
               id="description"
               className="text-area"
               placeholder="Tell us something about this item"
@@ -92,7 +137,7 @@ class ItemForm extends Component {
             <label className="custom-upload label" htmlFor="image">
               Upload image
             </label>
-            <input className="input" id="image" type="file" />
+            <input name="image" className="input" id="image" type="file" />
           </div>
 
           <h2>Contact information</h2>
@@ -102,10 +147,10 @@ class ItemForm extends Component {
               How do you want to be reached?
             </label>
             <div>
-              <input type="radio" />
+              <input name="email" type="radio" />
               user email
             </div>
-            <input type="radio" />
+            <input name="phone" type="radio" />
             contact phone number
           </div>
 
@@ -115,7 +160,7 @@ class ItemForm extends Component {
             personal page.
           </p>
 
-          <button className="btn-submit">Add Item</button>
+          <button className="btn-submit" onClick={this.handleSubmit}>Add Item</button>
         </form>
       </div>
     );
