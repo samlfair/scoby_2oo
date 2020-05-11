@@ -1,59 +1,62 @@
 import React, { Component } from "react";
 import LocationAutoComplete from "../LocationAutoComplete";
-import "../../styles/form.css"
-import axios from "axios"
+import "../../styles/form.css";
+import axios from "axios";
 
 class ItemForm extends Component {
-  
   state = {
-    name:"",
-    description:"",
-    image:"",
-    category:"",
-    quantity:0,
-    address:"",
-    email:false,
-    phone:false,
-    type:undefined,
-    coordinates:undefined,
-    formattedAddress:undefined
-
-    }
+    name: "",
+    description: "",
+    image: "",
+    category: "",
+    quantity: 0,
+    address: "",
+    email: false,
+    phone: false,
+    type: undefined,
+    coordinates: undefined,
+    formattedAddress: undefined,
+  };
 
   handleChange = (event) => {
     // console.log(event);
-    if (event.target.name !== "email" && event.target.name !== "phone" && event.target.name !=="image"){
-      this.setState({[event.target.name]:event.target.value});
-    } else if (event.target.name ==="image"){
-      this.setState({image : event.target.closest("form").image.files[0]});
-    } else  {
-      this.setState({[event.target.name]:event.target.checked});
+    if (
+      event.target.name !== "email" &&
+      event.target.name !== "phone" &&
+      event.target.name !== "image"
+    ) {
+      this.setState({ [event.target.name]: event.target.value });
+    } else if (event.target.name === "image") {
+      this.setState({ image: event.target.closest("form").image.files[0] });
+    } else {
+      this.setState({ [event.target.name]: event.target.checked });
     }
-    
-  }
+  };
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const form = new FormData()
+    const form = new FormData();
+    console.log(this.state.coordinates);
     const location = {
-      type: this.state.type,
+      // type: this.state.type,
       coordinates: this.state.coordinates,
       formattedAddress: this.state.formattedAddress,
-    }
+    };
     console.log(this.state);
-    form.append("name",this.state.name)
-    form.append("description",this.state.description)
-    form.append("image",this.state.image)
-    form.append("category",this.state.category)
-    form.append("quantity",this.state.quantity)
-    form.append("address",this.state.address)
-    form.append("location", location)
+    form.append("name", this.state.name);
+    form.append("description", this.state.description);
+    form.append("image", this.state.image);
+    form.append("category", this.state.category);
+    form.append("quantity", this.state.quantity);
+    form.append("address", this.state.address);
+    form.append("location", this.state.coordinates);
 
-    console.log(form)
-  
-    axios.post(process.env.REACT_APP_BACKEND_URL + "/api/items", form)
-    .then(apiResponse => console.log(apiResponse))
-    .catch(apiErr => console.log(apiErr))
+    console.log(form);
+
+    axios
+      .post(process.env.REACT_APP_BACKEND_URL + "/api/items", form)
+      .then((apiResponse) => console.log(apiResponse))
+      .catch((apiErr) => console.log(apiErr));
 
     // In order to send back the data to the client, since there is an input type file you have to send the
     // data as formdata.
@@ -67,9 +70,13 @@ class ItemForm extends Component {
     // This handle is passed as a callback to the autocomplete component.
     // Take a look at the data and see what you can get from it.
     // Look at the item model to know what you should retrieve and set as state.
-
-    this.setState({type : place.geometry.type, coordinates: place.geometry.coordinates, formattedAddress: place.geometry.place_name, address : place.geometry.place_name});
     console.log(place);
+    this.setState({
+      // type: place.geometry.type,
+      coordinates: place.geometry.coordinates,
+      formattedAddress: place.place_name,
+      address: place.place_name,
+    });
   };
 
   render() {
@@ -111,7 +118,12 @@ class ItemForm extends Component {
             <label className="label" htmlFor="quantity">
               Quantity
             </label>
-            <input name="quantity" className="input" id="quantity" type="number" />
+            <input
+              name="quantity"
+              className="input"
+              id="quantity"
+              type="number"
+            />
           </div>
 
           <div className="form-group">
@@ -160,7 +172,9 @@ class ItemForm extends Component {
             personal page.
           </p>
 
-          <button className="btn-submit" onClick={this.handleSubmit}>Add Item</button>
+          <button className="btn-submit" onClick={this.handleSubmit}>
+            Add Item
+          </button>
         </form>
       </div>
     );

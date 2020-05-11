@@ -5,8 +5,6 @@ const multer = require("multer");
 const upload = multer();
 const uploadCloud = require("../config/cloudinaryConfig.js");
 
-
-
 // Show all characters
 
 router.get("/", function (req, res, next) {
@@ -30,6 +28,8 @@ router.post(`/`, uploadCloud.single("image"), (req, res, next) => {
   if (req.file) {
     req.body.image = req.file.secure_url;
   }
+  req.body.location = req.body.location.split(",");
+  console.log(req.body);
   Item.create(req.body)
     .then((dbRes) => res.status(200).json(dbRes))
     .catch((err) => res.status(500).json(err));

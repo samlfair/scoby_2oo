@@ -18,11 +18,12 @@ const itemSchema = new Schema(
     ],
     quantity: Number,
     address: String,
-    location: {
-      // type: "Point",
-      coordinates: [Number],
-      formattedAddress: String,
-    },
+    location: [Number],
+    // location: {
+    //   // type: "Point",
+    //   coordinates: [Number],
+    //   formattedAddress: String,
+    // },
     id_user: {
       type: Schema.Types.ObjectId,
       ref: "User",
