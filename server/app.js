@@ -19,7 +19,11 @@ const cors = require("cors");
 app.use(
   cors({
     origin: process.env.FRONT_END_URL,
+<<<<<<< HEAD
     credentials: true,
+=======
+    credentials: true
+>>>>>>> master
   })
 );
 

@@ -50,4 +50,7 @@ export default {
       .then((res) => res.data)
       .catch(errorHandler);
   },
+  getOne(id){
+    return service.get("/api/items/"+id)
+  }
 };
