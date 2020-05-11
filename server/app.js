@@ -1,14 +1,7 @@
-/*
-
-Notes:
-
-npm i cors
-
-*/
-
 require("dotenv").config();
 require("./config/dbConnection");
 
+const uploadCloud = require("./config/cloudinaryConfig");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -26,6 +19,7 @@ const cors = require("cors");
 app.use(
   cors({
     origin: process.env.FRONT_END_URL,
+    credentials: true,
   })
 );
 
