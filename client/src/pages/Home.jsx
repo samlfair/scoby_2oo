@@ -1,36 +1,85 @@
-import React from "react";
-import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
+import React, { Component } from "react";
+import ReactMapboxGl, { Layer, Feature, Popup } from "react-mapbox-gl";
 import { withUser } from "../components/Auth/withUser";
+import CardItem from "../components/CardItem";
+import axios from "axios"
 
 const Map = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
 });
 
-const Home = (props) => {
-  // Implement react map box here.
-  console.log(props);
-  return (
-    <div>
-      <Map
-        style="mapbox://styles/mapbox/streets-v9"
-        containerStyle={{
-          height: "100vh",
-          width: "100vw",
-        }}
-      >
-        <Layer
-          type="symbol"
-          id="marker"
-          layout={{
-            "icon-image": "marker-15",
+class Home extends Component {
+ 
+  state = {
+    isClicked : false,
+    items : undefined,
+    name:"",
+    quantity:undefined,
+    category:"",
+    address:"",
+    image:","
+
+  }
+
+  // first, add all of the items in an array to the state with axios
+// then, iterate through those item to generate a component for each one
+handleClick = (item, e) => {
+  this.setState({isClicked : !this.state.isClicked})
+  this.setState({image : item.image, name : item.name, category : item.category, address: item.address, quantity : item.quantity})
+  console.log(this.state)
+  console.log(item)
+}
+
+componentDidMount(){
+  axios.get(process.env.REACT_APP_BACKEND_URL + "/api/items")
+.then((apiResponse) => {this.setState({items : apiResponse.data})
+console.log(this.state.items)})
+.catch((apiErr) => console.log(apiErr))	
+}
+
+
+
+  
+  render(){
+    return (
+      <div>
+        <Map
+          style="mapbox://styles/mapbox/streets-v9"
+          containerStyle={{
+            height: "100vh",
+            width: "100vw",
           }}
+          center={[2.3361, 48.8601]}
         >
-          <Feature coordinates={[-0.481747846041145, 51.3233379650232]} />
-        </Layer>
-      </Map>
-      ; <p> On home / </p> }
-    </div>
-  );
+          <Layer
+            type="symbol"
+            id="marker"
+            layout={{
+              "icon-image": "garden-15",
+            }}
+            
+          >
+          {this.state.items &&
+            this.state.items.map(item => {
+              return <Feature key={item._id} coordinates={item.location}
+				   onClick = {() => this.handleClick(item)}
+				   />
+              
+	         })
+          }
+            
+          </Layer>
+          {this.state.isClicked &&
+            <CardItem name ={this.state.name} category ={this.state.category} address={this.state.address} quantity={this.state.quantity} image ={this.state.image} /> 
+            }
+          
+        </Map>
+        
+      
+      </div>
+    );
+  }
+  
 };
 
 export default withUser(Home);
