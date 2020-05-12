@@ -74,6 +74,7 @@ class Profile extends Component {
   handleEdit = (id) => {
     console.log("Edit");
     console.log(id);
+    this.props.history.push("/item/edit/" + id);
   };
 
   render() {

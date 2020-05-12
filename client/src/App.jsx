@@ -7,7 +7,8 @@ import Signup from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
 import FormItem from "./components/Forms/FormItem";
-import EditProfile from "./pages/EditProfile"
+import EditProfile from "./pages/EditProfile";
+import EditItem from "./pages/EditItem";
 
 function App() {
   return (
@@ -19,7 +20,12 @@ function App() {
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/item/create" component={FormItem} />
         <ProtectedRoute exact path="/profile" component={Profile} />
-        <ProtectedRoute exact path="/profile/settings" component={EditProfile} />
+        <ProtectedRoute
+          exact
+          path="/profile/settings"
+          component={EditProfile}
+        />
+        <ProtectedRoute exact path="/item/edit/:id" component={EditItem} />
       </Switch>
     </div>
   );
