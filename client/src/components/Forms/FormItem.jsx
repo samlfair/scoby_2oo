@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import LocationAutoComplete from "../LocationAutoComplete";
 import "../../styles/form.css";
 import axios from "axios";
+import { withUser } from "../Auth/withUser";
 
 class ItemForm extends Component {
   state = {
+    // user: this.props.authContext.user._id,
     name: "",
     description: "",
     image: "",
@@ -42,7 +44,7 @@ class ItemForm extends Component {
       coordinates: this.state.coordinates,
       formattedAddress: this.state.formattedAddress,
     };
-    console.log(this.state);
+
     form.append("name", this.state.name);
     form.append("description", this.state.description);
     form.append("image", this.state.image);
@@ -50,12 +52,13 @@ class ItemForm extends Component {
     form.append("quantity", this.state.quantity);
     form.append("address", this.state.address);
     form.append("location", this.state.coordinates);
-
-    console.log(form);
-
+    form.append("id_user", this.props.authContext.user._id);
     axios
       .post(process.env.REACT_APP_BACKEND_URL + "/api/items", form)
-      .then((apiResponse) => console.log(apiResponse))
+      .then((apiResponse) => {
+        console.log(apiResponse);
+        this.props.history.push("/profile");
+      })
       .catch((apiErr) => console.log(apiErr));
 
     // In order to send back the data to the client, since there is an input type file you have to send the
@@ -71,6 +74,7 @@ class ItemForm extends Component {
     // Take a look at the data and see what you can get from it.
     // Look at the item model to know what you should retrieve and set as state.
     console.log(place);
+    console.log(this.props.authContext.user._id);
     this.setState({
       // type: place.geometry.type,
       coordinates: place.geometry.coordinates,
@@ -181,4 +185,4 @@ class ItemForm extends Component {
   }
 }
 
-export default ItemForm;
+export default withUser(ItemForm);

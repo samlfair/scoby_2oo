@@ -43,7 +43,7 @@ app.use(function (req, res, next) {
   console.log(
     "There is a non-functioning route protection function in server/app.js"
   );
-  console.log(req.session.currentUser);
+  // console.log(req.session.currentUser);
   next();
 });
 

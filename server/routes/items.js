@@ -8,8 +8,15 @@ const uploadCloud = require("../config/cloudinaryConfig.js");
 // Show all characters
 
 router.get("/", function (req, res, next) {
-  Item.find({})
-    .then((dbRes) => res.status(200).json(dbRes))
+  const mongoQuery = {};
+  if (req.query.user_id) {
+    mongoQuery.id_user = req.query.user_id;
+  }
+  Item.find(mongoQuery)
+    .then((dbRes) => {
+      console.log(dbRes);
+      res.status(200).json(dbRes);
+    })
     .catch((err) => res.status(500).json(err));
 });
 
@@ -27,6 +34,9 @@ router.post(`/`, uploadCloud.single("image"), (req, res, next) => {
   console.log(req.body);
   if (req.file) {
     req.body.image = req.file.secure_url;
+  } else {
+    console.log("no image");
+    delete req.body.image;
   }
   req.body.location = req.body.location.split(",");
   console.log(req.body);
@@ -46,15 +56,18 @@ router.patch("/:id", function (req, res, next) {
 // Delete one character
 
 router.delete("/:id", function (req, res, next) {
+  console.log("Delete");
   Item.findByIdAndRemove(req.params.id)
     .then((dbRes) => {
-      if (characterDocument === null) {
+      if (dbRes === null) {
         res.status(404).json({ message: "Character not found" });
       } else {
-        res.status(204).json(characterDocument);
+        console.log("Deleted");
+        res.status(204).json(dbRes);
       }
     })
-    .catch((err) => res.status(500).json(err));
+    .catch((err) => console.log(err));
+  // .catch((err) => res.status(500).json(err));
 });
 
 module.exports = router;
