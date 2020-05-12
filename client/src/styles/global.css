@@ -33,3 +33,23 @@ h2 {
   color: #5663ff;
   font-weight: 700;
 }
+
+.cardItem {
+  position: absolute;
+  background-color: white;
+  height:45vh;
+  width:25vw;
+  margin: 6vh 0 0 3vw ;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.cardItem img {
+  width: 100px;
+  height: 100px;
+}
+
+.cardItem p {
+  text-align: center;
+}
