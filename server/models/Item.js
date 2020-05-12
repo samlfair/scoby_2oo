@@ -28,6 +28,8 @@ const itemSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    user_firstName: String,
+    user_lastName: String,
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

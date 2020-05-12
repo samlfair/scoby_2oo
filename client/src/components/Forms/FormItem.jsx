@@ -36,6 +36,7 @@ class ItemForm extends Component {
   };
 
   handleSubmit = (event) => {
+    console.log(this.props.authContext.user);
     event.preventDefault();
     const form = new FormData();
     console.log(this.state.coordinates);
@@ -53,6 +54,8 @@ class ItemForm extends Component {
     form.append("address", this.state.address);
     form.append("location", this.state.coordinates);
     form.append("id_user", this.props.authContext.user._id);
+    form.append("user_firstName", this.props.authContext.user.firstName);
+    form.append("user_lastName", this.props.authContext.user.lastName);
     axios
       .post(process.env.REACT_APP_BACKEND_URL + "/api/items", form)
       .then((apiResponse) => {
