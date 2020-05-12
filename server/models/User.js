@@ -10,6 +10,7 @@ const userSchema = new Schema({
       "https://vignette.wikia.nocookie.net/simpsons/images/1/14/Ralph_Wiggum.png/revision/latest/top-crop/width/360/height/360?cb=20100704163100",
   },
   email: String,
+  phoneNumber: String,
   password: String,
   city: String,
   contact: {
